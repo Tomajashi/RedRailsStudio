@@ -6,4 +6,5 @@ import org.springframework.boot.SpringApplication;
 public class main {
     public static void main(String[] args) {
         SpringBootApplication.run(main.class, args);
+        //TODO: hier muss die spring boot app gestartet werden und die web socket konfiguration
 }

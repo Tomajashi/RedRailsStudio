@@ -11,5 +11,6 @@ public class runtimeclock {
    public void Init(){
     this.startTime = Instant.now();
  }
-
+// TODO das clock sollte nur starten wenn der user auf den play game button drückt und dann die zeit 
+    
 }
