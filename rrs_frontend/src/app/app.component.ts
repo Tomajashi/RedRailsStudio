@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MapComponent } from './components/map/map.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { RessoursesComponent } from './components/ressourses/ressourses.component';
+import { APISService } from './services/apis.service';
 
 @Component({
   selector: 'app-root',

@@ -8,13 +8,16 @@ import { APISService } from '../../services/apis.service';
   styleUrl: './ressourses.component.scss'
 })
 export class RessoursesComponent implements OnInit {
-  data: any[];
-
+  displayedValue: string =''; // Display value ist die ausgegebene wert auf den bild schirm
+  
   constructor(private apiService: APISService) {
-    this.data = []; // Initialize data as an empty array
-  }
-  ngOnInit(){
     
+  }
+  
+  ngOnInit(private apiService: APISService) {
+    this.apiService.getData('ressources').subscribe((response) => {
+      this.displayedValue = response.value; //setzt der zahl am bildshirm um
+    })
   }
 
 }
