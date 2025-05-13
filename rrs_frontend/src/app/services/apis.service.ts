@@ -10,8 +10,8 @@ export class APISService {
 
   constructor(private http: HttpClient) { }
 
-  getData(endpoint: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}${endpoint}`); //holt data von der Server
+  getData(): Observable<string> {
+    return this.http.get(this.baseUrl, { responseType: 'text' });
   }
 
   postData(endpoint: string, data: any): Observable<any> {
