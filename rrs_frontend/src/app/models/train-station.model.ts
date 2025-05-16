@@ -3,5 +3,5 @@ export interface TrainStation {
   name: string;
   capacatiy: number;
   railways: number;
-  takt: number; // ein und ausfahrtszeit in sekunden
+  takt: number;
 }

@@ -2,15 +2,20 @@ package com;
 
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import lombok.Data;
 
+import java.time.OffsetDateTime;
+
+@Data
 @Component
 public class RuntimeClock {
 
-    private Instant startTime;
+    private OffsetDateTime clock;
 
     public void Init() {
-        this.startTime = Instant.now();
-        System.out.println("Runtime clock started at: " + startTime);
+
+        clock = OffsetDateTime.now();
+        System.out.println("Runtime clock started at: " + clock);
+        // Simulate the clock ticking every second        
     }
 }
