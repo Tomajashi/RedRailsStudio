@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { APISService } from '../../services/apis.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-resourses',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './resourses.component.html',
   styleUrls: ['./resourses.component.scss']
 })
