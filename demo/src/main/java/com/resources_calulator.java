@@ -1,27 +1,61 @@
 package com;
 import models.TrainsInfo;
 import models.Resources;
+import java.time.Duration;
 import org.springframework.context.annotation.Configuration;
-
+import java.time.OffsetDateTime;
 
 @Configuration
 
-public class resources_calulator {
-    private int DB_coin;
-    private int energy_capacity; 
-    private int man_power;
+public class Resources_calulator {
+    private Resources resources = new Resources();
+    private boolean calculateResources;
+    private int coins = resources.getDB_coin();
     
-    
-    public int DB_coin_calculator() {
-        Resources resources = new Resources();
+    private final int COIN_CAP = 100_000;
+    private final int COIN_INCREMENT_PER_SECOND = 5;
+    private final int TRAINSINFO_INTERVAL_SECONDS = 10;
+
+    public int DB_coin_calculator(boolean calculateResources) {
         TrainsInfo trainsInfo = new TrainsInfo();
-        int coins = resources.getDB_coin()+(trainsInfo.getTotalTrains()*trainsInfo.getTotalPassengers()*trainsInfo.getTotalRailways());
+        int coinsToAdd = trainsInfo.getTotalTrains() * trainsInfo.getTotalPassengers() * trainsInfo.getTotalRailways();
+        coins = Math.min(coins + coinsToAdd, COIN_CAP);
         return coins;
+    }
 
+    public void startCoinIncrementThread() {
+        Thread coinThread = new Thread(() -> {
+            OffsetDateTime lastIncrement = OffsetDateTime.now();
+            OffsetDateTime lastTrainsInfoCalc = OffsetDateTime.now();
+            while (this.calculateResources) {
+                try {
+                    Thread.sleep(200);
+                    OffsetDateTime now = OffsetDateTime.now();
+                    Duration duration = Duration.between(lastIncrement, now);
+                    Duration trainsInfoDuration = Duration.between(lastTrainsInfoCalc, now);
 
-//TODO: coins sollen wahrend des spiels hoch gezählt werden.
-//TODO: strom logik muss noch implementiert werden (basis 10 kwh. konsum von bahn 5kw und konsum von bahnhofer 2kw. konsum muss net die kapazität überschreiten)
-//TODO: manpower muss auch noch implementiert werden (jeder bahn braucht 3 manpower und jeder bahnhof 5 manpower. manpower konsum muss auch nicht die kapazität überschreiten)
+                    // Increment coins per second
+                    if (duration.getSeconds() >= 1) {
+                        long secondsElapsed = duration.getSeconds();
+                        coins = Math.min(coins + (int)(COIN_INCREMENT_PER_SECOND * secondsElapsed), COIN_CAP);
+                        lastIncrement = lastIncrement.plusSeconds(secondsElapsed);
+                    }
+
+                    // TrainsInfo calculation every 30 seconds
+                    if (trainsInfoDuration.getSeconds() >= TRAINSINFO_INTERVAL_SECONDS) {
+                        DB_coin_calculator(true);
+                        lastTrainsInfoCalc = lastTrainsInfoCalc.plusSeconds(
+                            (trainsInfoDuration.getSeconds() / TRAINSINFO_INTERVAL_SECONDS) * TRAINSINFO_INTERVAL_SECONDS
+                        );
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        coinThread.setDaemon(true);
+        coinThread.start();
     }
 
 
