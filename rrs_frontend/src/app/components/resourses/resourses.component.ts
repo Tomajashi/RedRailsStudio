@@ -5,18 +5,18 @@ import { APISService } from '../../services/apis.service';
   selector: 'app-resourses',
   imports: [],
   templateUrl: './resourses.component.html',
-  styleUrl: './resourses.component.scss'
+  styleUrls: ['./resourses.component.scss']
 })
 export class ResoursesComponent implements OnInit {
-  displayedValue: string =''; // Display value ist die ausgegebene wert auf den bild schirm
+  displayedValue: number =0; // Display value ist die ausgegebene wert auf den bild schirm
   
   constructor(private apiService: APISService) {
     
   }
 
   ngOnInit(): void {
-    this.apiService.getData().subscribe((response) => {
-      this.displayedValue = response;
+    this.apiService.getTotalTrains().subscribe((totalTrains) => {
+      this.displayedValue = totalTrains; //TODO: make displayvalue and trainsinfo same type
     });
   }
 

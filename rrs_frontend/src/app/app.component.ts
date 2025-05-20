@@ -7,7 +7,7 @@ import { APISService } from './services/apis.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MapComponent, ResoursesComponent, SettingsComponent],  // Keep only MapComponent
+  imports: [ResoursesComponent],  // Keep only MapComponent
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
