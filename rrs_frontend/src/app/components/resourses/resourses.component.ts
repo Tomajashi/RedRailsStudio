@@ -10,12 +10,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./resourses.component.scss']
 })
 export class ResoursesComponent implements OnInit {
-  displayedValue: number =0; // Display value ist die ausgegebene wert auf den bild schirm
+  displayedValue: number = 0; // Display value ist die ausgegebene wert auf den bild schirm
   
   constructor(private apiService: APISService) {
     
   }
-
   ngOnInit(): void {
     this.apiService.getTotalTrains().subscribe((totalTrains) => {
       this.displayedValue = totalTrains; //TODO: make displayvalue and trainsinfo same type
