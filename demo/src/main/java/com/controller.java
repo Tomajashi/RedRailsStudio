@@ -14,7 +14,7 @@ import models.TrainsInfo;
 
 @RestController
 @RequiredArgsConstructor
-public class Controller {
+public class controller {
 
     private final Runtimeclock runtimeClock;
 

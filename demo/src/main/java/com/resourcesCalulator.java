@@ -7,19 +7,19 @@ import java.time.OffsetDateTime;
 
 @Configuration
 
-public class Resources_calulator {
+public class resourcesCalulator {
     private Resources resources = new Resources();
     private boolean calculateResources;
     private int coins = resources.getDB_coin();
     
-    private final int COIN_CAP = 100_000;
-    private final int COIN_INCREMENT_PER_SECOND = 5;
-    private final int TRAINSINFO_INTERVAL_SECONDS = 10;
+    private final int coinCap = 100_000;
+    private final int coinIncrementPerSecond = 5;
+    private final int trainsInfoIntervalSeconds = 10;
 
     public int DB_coin_calculator(boolean calculateResources) {
         TrainsInfo trainsInfo = new TrainsInfo();
         int coinsToAdd = trainsInfo.getTotalTrains() * trainsInfo.getTotalPassengers() * trainsInfo.getTotalRailways();
-        coins = Math.min(coins + coinsToAdd, COIN_CAP);
+        coins = Math.min(coins + coinsToAdd, coinCap);
         return coins;
     }
 
@@ -37,15 +37,15 @@ public class Resources_calulator {
                     // Increment coins per second
                     if (duration.getSeconds() >= 1) {
                         long secondsElapsed = duration.getSeconds();
-                        coins = Math.min(coins + (int)(COIN_INCREMENT_PER_SECOND * secondsElapsed), COIN_CAP);
+                        coins = Math.min(coins + (int)(coinIncrementPerSecond * secondsElapsed), coinCap);
                         lastIncrement = lastIncrement.plusSeconds(secondsElapsed);
                     }
 
                     // TrainsInfo calculation every 30 seconds
-                    if (trainsInfoDuration.getSeconds() >= TRAINSINFO_INTERVAL_SECONDS) {
+                    if (trainsInfoDuration.getSeconds() >= trainsInfoIntervalSeconds) {
                         DB_coin_calculator(true);
                         lastTrainsInfoCalc = lastTrainsInfoCalc.plusSeconds(
-                            (trainsInfoDuration.getSeconds() / TRAINSINFO_INTERVAL_SECONDS) * TRAINSINFO_INTERVAL_SECONDS
+                            (trainsInfoDuration.getSeconds() / trainsInfoIntervalSeconds) * trainsInfoIntervalSeconds
                         );
                     }
                 } catch (InterruptedException e) {
@@ -53,6 +53,7 @@ public class Resources_calulator {
                     break;
                 }
             }
+            //TODO: the calcualtion of the resources should be done without the need of a thread
         });
         coinThread.setDaemon(true);
         coinThread.start();

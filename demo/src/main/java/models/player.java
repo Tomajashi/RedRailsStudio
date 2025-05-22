@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor 
 @NoArgsConstructor
 @Data
-public class Resources {
-    private int playerId; 
-    private int DB_coin;
-    private int energy_capacity;
-    private int man_power;
-
-   
+public class player {
+    private int playerId;
+    private String playerName;
 }
