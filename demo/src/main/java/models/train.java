@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor 
 @NoArgsConstructor
 @Data
-public class player {
-    private int playerId;
-    private TrainsInfo trainsInfo;
-    private String playerName;
+
+public class train {
+    private int trainId;
+    private int maxCapacity;
 }
