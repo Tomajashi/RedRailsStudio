@@ -16,7 +16,7 @@ import models.TrainsInfo;
 @RequiredArgsConstructor
 public class Controller {
 
-    private final RuntimeClock runtimeClock;
+    private final Runtimeclock runtimeClock;
 
     
     // TODO: kommunikation mit dem Frontend um die reessourcen zu berechnen und es zuruckgeben
@@ -37,18 +37,10 @@ public class Controller {
         TrainsInfo trainsInfo = new TrainsInfo();
         
         OffsetDateTime now = OffsetDateTime.now();
-        Long time = Duration.between(now, runtimeClock.getClock()).toSeconds();
+        Long time = Duration.between(now, runtimeClock.getStartTime()).toSeconds();
         return trainsInfo;
     }        
 
 
-    @PostMapping("/api/wait")
-    public String waitForClock(@RequestBody String trigger) {
-        if ("start".equalsIgnoreCase(trigger)) {
-            runtimeClock.Init(); // Start the runtime clock
-            return "Runtime clock started!";
-
-        }
-        return "Invalid trigger!";
-    }
+    
 }

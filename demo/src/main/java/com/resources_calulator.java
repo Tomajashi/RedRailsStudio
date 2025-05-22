@@ -14,7 +14,7 @@ public class Resources_calulator {
     
     private final int COIN_CAP = 100_000;
     private final int COIN_INCREMENT_PER_SECOND = 5;
-    private final int TRAINSINFO_INTERVAL_SECONDS = 30;
+    private final int TRAINSINFO_INTERVAL_SECONDS = 10;
 
     public int DB_coin_calculator(boolean calculateResources) {
         TrainsInfo trainsInfo = new TrainsInfo();
