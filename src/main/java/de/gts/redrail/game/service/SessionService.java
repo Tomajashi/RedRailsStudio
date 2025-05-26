@@ -1,0 +1,150 @@
+package de.gts.redrail.game.service;
+
+import de.gts.redrail.game.component.GameClock;
+import de.gts.redrail.game.component.PlayComponentsStore;
+import de.gts.redrail.game.component.ResourceCalculator;
+import de.gts.redrail.game.constants.GameStateEnum;
+import de.gts.redrail.game.mappers.dtos.PlayerDtoMapper;
+import de.gts.redrail.game.mappers.dtos.PlayerOverviewDtoMapper;
+import de.gts.redrail.game.mappers.entities.PlayerMapper;
+import de.gts.redrail.game.models.entities.ActionResult;
+import de.gts.redrail.game.models.dtos.PlayerDto;
+import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
+import de.gts.redrail.game.models.dtos.SessionOverviewDto;
+import de.gts.redrail.game.models.entities.Player;
+import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.utils.PlayerUtil;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static de.gts.redrail.game.constants.GameStateEnum.*;
+import static de.gts.redrail.game.constants.ResponseText.ACTION_FAILED_NO_MATCH_PLAYER;
+
+@Service
+@RequiredArgsConstructor
+public class SessionService {
+
+    private String sessionName;
+    private final GameClock sessionClock;
+    private List<Player> sessionPlayers;
+    private GameStateEnum gameState = NOT_CREATED;
+    private final ResourceCalculator resourceCalculator;
+    private final PlayComponentsStore playComponentsStore;
+
+    private final PlayerDtoMapper playerDtoMapper;
+    private final PlayerMapper playerMapper;
+    private final PlayerOverviewDtoMapper playerOverviewDtoMapper;
+
+    public void createSession(String name) {
+        sessionName = name;
+        sessionPlayers = new ArrayList<>();
+        gameState = NOT_STARTED;
+    }
+
+    public boolean startSession() {
+        if (CollectionUtils.isEmpty(sessionPlayers)) {
+            return false;
+        }
+
+        gameState = RUNNING;
+        sessionClock.startClock();
+
+        return true;
+    }
+
+    public void endSession() {
+        gameState = FINISHED;
+        sessionClock.endClock();
+    }
+
+    public SessionOverviewDto createCurrentSessionOverview() {
+        SessionOverviewDto sessionOverviewDto = new SessionOverviewDto();
+
+        sessionOverviewDto.setSessionName(sessionName);
+        sessionOverviewDto.setPlayers(playerOverviewDtoMapper.map(sessionPlayers));
+        sessionOverviewDto.setGameState(gameState);
+        sessionOverviewDto.setSessionStarted(sessionClock.getStarted());
+        sessionOverviewDto.setSessionEnded(sessionClock.getEnded());
+
+        return sessionOverviewDto;
+    }
+
+    public boolean joinSession(PlayerOverviewDto playerWantToJoin) {
+        for (Player player : sessionPlayers) {
+            if (PlayerUtil.isPlayerMatching(player, playerWantToJoin)) {
+                return false;
+            }
+        }
+
+        Player newPlayer = playerMapper.map(playerWantToJoin);
+
+        if (newPlayer == null) {
+            return false;
+        }
+
+        Rail rail = new Rail();
+        rail.setUId(UUID.randomUUID().toString());
+        rail.setLevel(1);
+
+        newPlayer.setRails(new ArrayList<>());
+        newPlayer.getRails().add(rail);
+
+        sessionPlayers.add(newPlayer);
+
+        return true;
+    }
+
+    public PlayerDto getPlayerStatus(String uId) {
+        resourceCalculator.calculateResource(sessionPlayers);
+
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, uId);
+
+        if (playerOptional.isEmpty()) {
+            return null;
+        }
+
+        return playerDtoMapper.map(playerOptional.get());
+    }
+
+    public ActionResult buyRail(String playerUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.buyRail(playerOptional.get());
+    }
+
+    public ActionResult upgradeRail(String playerUid, String railUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.upgradeRail(playerOptional.get(), railUid);
+    }
+
+    public boolean isSessionNameMatching(String name) {
+        if (name == null || sessionName == null) {
+            return false;
+        }
+
+        return sessionName.equals(name);
+    }
+
+    public GameStateEnum getGameState() {
+        return gameState;
+    }
+}

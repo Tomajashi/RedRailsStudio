@@ -1,0 +1,61 @@
+package de.gts.redrail.game.component;
+
+import de.gts.redrail.game.models.entities.ActionResult;
+import de.gts.redrail.game.models.entities.Player;
+import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.utils.RailUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static de.gts.redrail.game.constants.ResourceCost.NEW_RAIL;
+import static de.gts.redrail.game.constants.ResourceCost.UPGRADE_RAIL_FACTOR;
+import static de.gts.redrail.game.constants.ResponseText.*;
+
+@Component
+@RequiredArgsConstructor
+public class PlayComponentsStore {
+
+    private final ResourceValidator resourceValidator;
+
+    public ActionResult buyRail(Player player) {
+        if (!resourceValidator.canBuyNewRail(player)) {
+            return new ActionResult(false, CANT_AFFORD_NEW_PLAY_COMPONENT);
+        }
+
+        Rail rail = new Rail();
+
+        rail.setUId(UUID.randomUUID().toString());
+        rail.setLevel(1);
+
+        player.getRails().add(rail);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - NEW_RAIL);
+
+        return new ActionResult(true, BOUGHT_NEW_PLAY_COMPONENT);
+    }
+
+    public ActionResult upgradeRail(Player player, String railUid) {
+        if (!resourceValidator.canUpgradeRail(player, railUid)) {
+            return new ActionResult(false, CANT_AFFORD_UPGRADE_PLAY_COMPONENT);
+        }
+
+        Optional<Rail> railOptional = RailUtil.getRailByUid(player.getRails(), railUid);
+
+        if (railOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAY_COMPONENT);
+        }
+
+        Rail rail = railOptional.get();
+        Integer level = rail.getLevel() + 1;
+        rail.setLevel(level);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - (level * UPGRADE_RAIL_FACTOR));
+
+        return new ActionResult(true, BOUGHT_UPGRADE);
+    }
+}

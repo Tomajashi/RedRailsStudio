@@ -1,0 +1,24 @@
+package de.gts.redrail.game.constants;
+
+public interface ResponseText {
+    //Session
+    String CREATED_SESSION = "session successfully created";
+    String CREATE_SESSION_FAILED_SESSION_IS_ALREADY_CREATED = "session creation failed - session is already created";
+    String STARTED_SESSION = "session started";
+    String END_SESSION = "session ended";
+    String START_SESSION_FAILED_NO_PLAYER = "session start failed - no player joined session";
+    String START_SESSION_FAILED_SESSION_IS_NOT_CREATED_IS_RUNNING_OR_FINISHED = "session start failed - session has wrong status";
+
+    //Join Session
+    String PLAYER_JOINED_SESSION = "player successfully joined session";
+    String PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED = "player joining session failed - session is running or finished";
+    String PLAYER_JOIN_SESSION_FAILED = "failed to joining player to session - maybe already joined session";
+
+    //Action
+    String CANT_AFFORD_NEW_PLAY_COMPONENT = "buy new play component failed - can't afford new play component";
+    String CANT_AFFORD_UPGRADE_PLAY_COMPONENT = "upgrade play component failed - can't afford upgrade";
+    String BOUGHT_NEW_PLAY_COMPONENT = "successfully bought new play component";
+    String BOUGHT_UPGRADE = "successfully bought upgrade";
+    String ACTION_FAILED_NO_MATCH_PLAYER = "action failed - no player matched uid";
+    String ACTION_FAILED_NO_MATCH_PLAY_COMPONENT = "action failed - no play component matched uid";
+}
