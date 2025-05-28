@@ -1,1 +1,11 @@
-<p>map works!</p>
+<div class="map-container">
+  <div class="pixel-map">
+    <div class="city" 
+         *ngFor="let city of cities"
+         [class.selected]="city === selectedCity"
+         (click)="selectCity(city)">
+      <div class="city-marker"></div>
+      <span class="city-name">{{city.name}}</span>
+    </div>
+  </div>
+</div>
