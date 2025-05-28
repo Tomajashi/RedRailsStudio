@@ -8,4 +8,6 @@ import lombok.NoArgsConstructor;
 public class Train {
     String uId;
     Integer level;
+    Integer requiredEmployees;
+    Integer requiredPower;
 }

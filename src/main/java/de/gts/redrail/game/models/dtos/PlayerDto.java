@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerDto {
-    String uId;
+    String uId; 
     String name;
 
     Integer dbCoin;

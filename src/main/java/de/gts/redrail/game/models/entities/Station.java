@@ -8,4 +8,6 @@ import lombok.NoArgsConstructor;
 public class Station {
     String uId;
     Integer level;
+    Integer requierdEmployes;
+    Integer requiredPower;
 }
