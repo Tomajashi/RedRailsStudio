@@ -34,7 +34,25 @@ public class ResourceValidator {
         return player.getResourceRack().getDbCoin() >= NEW_TRAIN;
     }
 
+    public boolean canUpgradeTrain(Player player, String trainUid) {
+        Optional<Train> trainOptional = TrainUtil.getTrainByUid(player.getTrains(), trainUid);
+        if (trainOptional.isEmpty()) {
+            return false;
+        }
+
+        return player.getResourceRack().getDbCoin() >= (trainOptional.get().getLevel() + 1) * UPGRADE_TRAIN_FACTOR;
+    }
+
     public boolean canBuyNewStation(Player player) {
         return player.getResourceRack().getDbCoin() >= NEW_STATION;
+    }
+
+    public boolean canUpgradeStation(Player player, String stationUid) {
+        Optional<Station> stationOptional = StationUtil.getStationByUid(player.getStations(), stationUid);
+        if (stationOptional.isEmpty()) {
+            return false;
+        }
+
+        return player.getResourceRack().getDbCoin() >= (stationOptional.get().getLevel() + 1) * UPGRADE_STATION_FACTOR;
     }
 }

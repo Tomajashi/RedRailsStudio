@@ -13,6 +13,7 @@ import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
 import de.gts.redrail.game.models.dtos.SessionOverviewDto;
 import de.gts.redrail.game.models.entities.Player;
 import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.models.entities.Station;
 import de.gts.redrail.game.utils.PlayerUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -89,11 +90,32 @@ public class SessionService {
         }
 
         Rail rail = new Rail();
+        Station station1 = new Station();
+        Station station2 = new Station();
+        Train train = new Train();
         rail.setUId(UUID.randomUUID().toString());
         rail.setLevel(1);
 
+        station1.setUId(UUID.randomUUID().toString());
+        station1.setName("Station 1");
+        station1.setLevel(1);
+        station2.setUId(UUID.randomUUID().toString());
+        station2.setName("Station 2");
+        station2.setLevel(1);
+        
+        train.setUId(UUID.randomUUID().toString());
+        train.setName("Train 1");
+        train.setLevel(1);
+
         newPlayer.setRails(new ArrayList<>());
         newPlayer.getRails().add(rail);
+
+        newPlayer.setStations(new ArrayList<>());
+        newPlayer.getStations().add(station1);
+        newPlayer.getStations().add(station2);
+
+        newPlayer.setTrains(new ArrayList<>());
+        newPlayer.getTrains().add(train);
 
         sessionPlayers.add(newPlayer);
 
@@ -122,6 +144,7 @@ public class SessionService {
         resourceCalculator.calculateResource(List.of(playerOptional.get()));
 
         return playComponentsStore.buyRail(playerOptional.get());
+        
     }
 
     public ActionResult upgradeRail(String playerUid, String railUid) {

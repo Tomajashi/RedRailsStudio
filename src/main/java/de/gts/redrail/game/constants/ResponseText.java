@@ -16,6 +16,7 @@ public interface ResponseText {
 
     //Action
     String CANT_AFFORD_NEW_PLAY_COMPONENT = "buy new play component failed - can't afford new play component";
+    String REQIUERMENT_NOT_MET = "action failed - requirements for buying train are not met";
     String CANT_AFFORD_UPGRADE_PLAY_COMPONENT = "upgrade play component failed - can't afford upgrade";
     String BOUGHT_NEW_PLAY_COMPONENT = "successfully bought new play component";
     String BOUGHT_UPGRADE = "successfully bought upgrade";

@@ -58,4 +58,87 @@ public class PlayComponentsStore {
 
         return new ActionResult(true, BOUGHT_UPGRADE);
     }
+
+    public ActionResult buyStation (Player player) {
+        if (!resourceValidator.canBuyNewStation(player)) {
+            return new ActionResult(false, CANT_AFFORD_NEW_PLAY_COMPONENT);
+        }
+
+        Station station = new Station();
+
+        station.setUId(UUID.randomUUID().toString());
+        station.setLevel(1);
+
+        player.getStations().add(station);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - NEW_RAIL);
+
+        return new ActionResult(true, BOUGHT_NEW_PLAY_COMPONENT);
+    }
+
+    public ActionResult upgradeStation(Player player, String stationUid) {
+        if (!resourceValidator.canUpgradeStation(player, stationUid)) {
+            return new ActionResult(false, CANT_AFFORD_UPGRADE_PLAY_COMPONENT);
+        }
+
+        Optional<Station> stationOptional = StationUtil.getStationByUid(player.getStations(), stationUid);
+
+        if (stationOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAY_COMPONENT);
+        }
+
+        Station station = stationOptional.get();
+        Integer level = station.getLevel() + 1;
+        station.setLevel(level);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - (level * UPGRADE_RAIL_FACTOR));
+
+        return new ActionResult(true, BOUGHT_UPGRADE);
+    }
+
+
+    public ActionResult buyTrain(Player player) {
+        if (!resourceValidator.canBuyNewTrain(player)) {
+            return new ActionResult(false, CANT_AFFORD_NEW_PLAY_COMPONENT);
+        }
+        if (!resourceValidator.requirmentsForTrain(player)) {
+            return new ActionResult(false, REQIUERMENT_NOT_MET);
+        }
+
+        Train train = new Train();
+
+        train.setUId(UUID.randomUUID().toString());
+        train.setLevel(1);
+
+        player.getTrains().add(train);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - NEW_RAIL);
+
+        return new ActionResult(true, BOUGHT_NEW_PLAY_COMPONENT);
+    }
+
+
+    public ActionResult upgradeTrain(Player player, String trainUid) {
+        if (!resourceValidator.canUpgradeTrain(player, trainUid)) {
+            return new ActionResult(false, CANT_AFFORD_UPGRADE_PLAY_COMPONENT);
+        }
+
+        Optional<Train> trainOptional = TrainUtil.getTrainByUid(player.getTrains(), trainUid);
+
+        if (trainOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAY_COMPONENT);
+        }
+
+        Train train = trainOptional.get();
+        Integer level = train.getLevel() + 1;
+        train.setLevel(level);
+
+        Integer dbCoin = player.getResourceRack().getDbCoin();
+        player.getResourceRack().setDbCoin(dbCoin - (level * UPGRADE_RAIL_FACTOR));
+
+        return new ActionResult(true, BOUGHT_UPGRADE);
+    }
 }
