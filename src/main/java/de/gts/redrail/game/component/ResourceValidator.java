@@ -1,13 +1,22 @@
 package de.gts.redrail.game.component;
 
-import de.gts.redrail.game.models.entities.Player;
-import de.gts.redrail.game.models.entities.Rail;
-import de.gts.redrail.game.utils.RailUtil;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
-import static de.gts.redrail.game.constants.ResourceCost.*;
+import org.springframework.stereotype.Component;
+
+import static de.gts.redrail.game.constants.ResourceCost.NEW_RAIL;
+import static de.gts.redrail.game.constants.ResourceCost.NEW_STATION;
+import static de.gts.redrail.game.constants.ResourceCost.NEW_TRAIN;
+import static de.gts.redrail.game.constants.ResourceCost.UPGRADE_RAIL_FACTOR;
+import static de.gts.redrail.game.constants.ResourceCost.UPGRADE_STATION_FACTOR;
+import static de.gts.redrail.game.constants.ResourceCost.UPGRADE_TRAIN_FACTOR;
+import de.gts.redrail.game.models.entities.Player;
+import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.models.entities.Station;
+import de.gts.redrail.game.models.entities.Train;
+import de.gts.redrail.game.utils.RailUtil;
+import de.gts.redrail.game.utils.StationUtil;
+import de.gts.redrail.game.utils.TrainUtil;
 
 @Component
 public class ResourceValidator {

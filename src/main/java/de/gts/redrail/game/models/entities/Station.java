@@ -10,4 +10,5 @@ public class Station {
     Integer level;
     Integer requierdEmployes;
     Integer requiredPower;
+    
 }

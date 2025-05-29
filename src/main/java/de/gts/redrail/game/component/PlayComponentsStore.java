@@ -3,6 +3,11 @@ package de.gts.redrail.game.component;
 import de.gts.redrail.game.models.entities.ActionResult;
 import de.gts.redrail.game.models.entities.Player;
 import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.models.entities.Station;
+import de.gts.redrail.game.models.entities.Train;
+
+import de.gts.redrail.game.utils.StationUtil;
+import de.gts.redrail.game.utils.TrainUtil;
 import de.gts.redrail.game.utils.RailUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

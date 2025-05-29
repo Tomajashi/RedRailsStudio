@@ -15,6 +15,7 @@ import de.gts.redrail.game.models.entities.Player;
 import de.gts.redrail.game.models.entities.Rail;
 import de.gts.redrail.game.models.entities.Station;
 import de.gts.redrail.game.utils.PlayerUtil;
+import de.gts.redrail.game.models.entities.Train;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -97,14 +98,11 @@ public class SessionService {
         rail.setLevel(1);
 
         station1.setUId(UUID.randomUUID().toString());
-        station1.setName("Station 1");
         station1.setLevel(1);
         station2.setUId(UUID.randomUUID().toString());
-        station2.setName("Station 2");
         station2.setLevel(1);
         
         train.setUId(UUID.randomUUID().toString());
-        train.setName("Train 1");
         train.setLevel(1);
 
         newPlayer.setRails(new ArrayList<>());
