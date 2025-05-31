@@ -1,0 +1,11 @@
+package game.constants;
+
+public Enum SessionStateEnum {
+    ISRUNNING,
+    ISPAUSED,
+    ISFINISHED,
+    NOTCREATED,
+    CREATED,
+
+    
+}
