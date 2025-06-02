@@ -1,32 +1,35 @@
 package de.gts.redrail.game.service;
 
-import de.gts.redrail.game.component.GameClock;
-import de.gts.redrail.game.component.PlayComponentsStore;
-import de.gts.redrail.game.component.ResourceCalculator;
-import de.gts.redrail.game.constants.GameStateEnum;
-import de.gts.redrail.game.mappers.dtos.PlayerDtoMapper;
-import de.gts.redrail.game.mappers.dtos.PlayerOverviewDtoMapper;
-import de.gts.redrail.game.mappers.entities.PlayerMapper;
-import de.gts.redrail.game.models.entities.ActionResult;
-import de.gts.redrail.game.models.dtos.PlayerDto;
-import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
-import de.gts.redrail.game.models.dtos.SessionOverviewDto;
-import de.gts.redrail.game.models.entities.Player;
-import de.gts.redrail.game.models.entities.Rail;
-import de.gts.redrail.game.models.entities.Station;
-import de.gts.redrail.game.utils.PlayerUtil;
-import de.gts.redrail.game.models.entities.Train;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.gts.redrail.game.constants.GameStateEnum.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Service;
+
+import de.gts.redrail.game.component.GameClock;
+import de.gts.redrail.game.component.PlayComponentsStore;
+import de.gts.redrail.game.component.ResourceCalculator;
+import de.gts.redrail.game.constants.GameStateEnum;
+import static de.gts.redrail.game.constants.GameStateEnum.FINISHED;
+import static de.gts.redrail.game.constants.GameStateEnum.NOT_CREATED;
+import static de.gts.redrail.game.constants.GameStateEnum.NOT_STARTED;
+import static de.gts.redrail.game.constants.GameStateEnum.RUNNING;
 import static de.gts.redrail.game.constants.ResponseText.ACTION_FAILED_NO_MATCH_PLAYER;
+import de.gts.redrail.game.mappers.dtos.PlayerDtoMapper;
+import de.gts.redrail.game.mappers.dtos.PlayerOverviewDtoMapper;
+import de.gts.redrail.game.mappers.entities.PlayerMapper;
+import de.gts.redrail.game.models.dtos.PlayerDto;
+import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
+import de.gts.redrail.game.models.dtos.SessionOverviewDto;
+import de.gts.redrail.game.models.entities.ActionResult;
+import de.gts.redrail.game.models.entities.Player;
+import de.gts.redrail.game.models.entities.Rail;
+import de.gts.redrail.game.models.entities.Station;
+import de.gts.redrail.game.models.entities.Train;
+import de.gts.redrail.game.utils.PlayerUtil;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -155,6 +158,55 @@ public class SessionService {
         resourceCalculator.calculateResource(List.of(playerOptional.get()));
 
         return playComponentsStore.upgradeRail(playerOptional.get(), railUid);
+    }
+    
+    public ActionResult buyStation(String playerUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.buyStation(playerOptional.get());
+    }
+
+    public ActionResult upgradeStation(String playerUid, String stationUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.upgradeStation(playerOptional.get(), stationUid);
+    }
+
+    public ActionResult buyTrain(String playerUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+       
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.buyTrain(playerOptional.get());
+    }
+
+    public ActionResult upgradeTrain(String playerUid, String trainUid) {
+        Optional<Player> playerOptional = PlayerUtil.getPlayerByUid(sessionPlayers, playerUid);
+
+        if (playerOptional.isEmpty()) {
+            return new ActionResult(false, ACTION_FAILED_NO_MATCH_PLAYER);
+        }
+
+        resourceCalculator.calculateResource(List.of(playerOptional.get()));
+
+        return playComponentsStore.upgradeTrain(playerOptional.get(), trainUid);
     }
 
     public boolean isSessionNameMatching(String name) {
