@@ -1,17 +1,30 @@
 package de.gts.redrail.game.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.gts.redrail.game.constants.GameStateEnum;
-import de.gts.redrail.game.models.entities.ActionResult;
+import static de.gts.redrail.game.constants.ResponseText.CREATED_SESSION;
+import static de.gts.redrail.game.constants.ResponseText.CREATE_SESSION_FAILED_SESSION_IS_ALREADY_CREATED;
+import static de.gts.redrail.game.constants.ResponseText.END_SESSION;
+import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOINED_SESSION;
+import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOIN_SESSION_FAILED;
+import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED;
+import static de.gts.redrail.game.constants.ResponseText.STARTED_SESSION;
+import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_NO_PLAYER;
+import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_SESSION_IS_NOT_CREATED_IS_RUNNING_OR_FINISHED;
 import de.gts.redrail.game.models.dtos.PlayerDto;
 import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
 import de.gts.redrail.game.models.dtos.SessionOverviewDto;
+import de.gts.redrail.game.models.entities.ActionResult;
 import de.gts.redrail.game.service.SessionService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import static de.gts.redrail.game.constants.ResponseText.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -132,7 +145,64 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
+    @PatchMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
+    public ResponseEntity<String> upgradeTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "trainUid") @NotNull String trainUid) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
 
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        ActionResult actionResult = sessionService.upgradeTrain(playerUid, trainUid);
+
+        return handleActionResult(actionResult);
+    }
+    @PatchMapping("/session/{sessionName}/player/{playerUid}/train")
+    public ResponseEntity<String> buyTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "trainUid") @NotNull String trainUid
+) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        ActionResult actionResult = sessionService.buyTrain(playerUid);
+
+        return handleActionResult(actionResult);
+    }
+    @PostMapping("/session/{sessionName}/player/{playerUid}/station")
+    public ResponseEntity<String> buyStation(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        ActionResult actionResult = sessionService.buyStation(playerUid);
+
+        return handleActionResult(actionResult);
+    }
+    @PatchMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
+    public ResponseEntity<String> upgradeStation(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "stationUid") @NotNull String stationUid) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        ActionResult actionResult = sessionService.upgradeStation(playerUid, stationUid);
+
+        return handleActionResult(actionResult);
+    }
+    
     private ResponseEntity<String> handleActionResult(ActionResult actionResult) {
         if (actionResult.isSuccessful()) {
             return ResponseEntity.ok(actionResult.getMessage());
