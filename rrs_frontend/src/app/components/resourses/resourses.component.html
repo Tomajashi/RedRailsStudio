@@ -1,9 +1,8 @@
-<div>
-    <table>
-        <tr>
-            <td>{{ displayedValue }}kw/s</td> <!--resource strom-->
-            <td><output></output></td> <!--resource mitarbeiter-->
-            <td><output></output>DB coins</td> <!--resource DB coins-->
-        </tr>
-    </table>
-</div>
+<table>
+    <tr>
+        <td>{{displayedValue}} total_trains</td>
+        <td>{{coinZahl}} DB coin</td>
+    </tr>
+</table>
+<button (click)="onBuyTrain()">Buy Train</button>
+

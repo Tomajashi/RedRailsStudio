@@ -1,23 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { APISService } from '../../services/apis.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-resourses',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './resourses.component.html',
-  styleUrl: './resourses.component.scss'
+  styleUrls: ['./resourses.component.scss']
 })
 export class ResoursesComponent implements OnInit {
-  displayedValue: string =''; // Display value ist die ausgegebene wert auf den bild schirm
-  
+  displayedValue: number = 0; // Display value ist die ausgegebene wert auf den bild schirm
+  coinZahl: number = 0; // Anzahl der Coins
+
   constructor(private apiService: APISService) {
     
   }
-
   ngOnInit(): void {
-    this.apiService.getData().subscribe((response) => {
-      this.displayedValue = response;
-    });
+    setInterval(() => {
+      this.apiService.getTotalTrains().subscribe((totalTrains) => {
+        this.displayedValue = totalTrains; 
+      });
+      this.apiService.getDBCoins().subscribe((coins) => { //holt DB coins vom backend service
+        this.coinZahl = coins; 
+      });
+    }, 30000) 
+    
   }
 
+  onBuyTrain() {
+    this.apiService.buyTrain('Test session', '1');
+  }
 }
