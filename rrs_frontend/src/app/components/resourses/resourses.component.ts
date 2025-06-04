@@ -17,12 +17,19 @@ export class ResoursesComponent implements OnInit {
     
   }
   ngOnInit(): void {
-    this.apiService.getTotalTrains().subscribe((totalTrains) => {
-      this.displayedValue = totalTrains; 
-    });
-    this.apiService.getDBCoins().subscribe((coins) => { //holt DB coins vom backend service
-      this.coinZahl = coins; 
-    });
+    setInterval(() => {
+      this.apiService.getTotalTrains().subscribe((totalTrains) => {
+        this.displayedValue = totalTrains; 
+      });
+      this.apiService.getDBCoins().subscribe((coins) => { //holt DB coins vom backend service
+        this.coinZahl = coins; 
+      });
+    }, 30000) 
+    
+  }
+
+  onBuyTrain() {
+    this.apiService.buyTrain('Test session', '1');
   }
 
 }

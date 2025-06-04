@@ -32,5 +32,8 @@ export class APISService {
   return this.http
     .get<Resources>(`${this.apiUrl}/getResources?playerId=${this.playerId}`).pipe(map((resources: Resources) => resources.DB_coin));
   }
-}
 
+  buyTrain(sessionName: string, playerUid: string) {
+    return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}playerId=${playerUid}`, null).subscribe((result) => console.log(result))
+  }
+}
