@@ -51,7 +51,7 @@ public class SessionService {
         sessionPlayers = new ArrayList<>();
         gameState = NOT_STARTED;
     }
-    public list <PlayerOverviewDto> getPlayers() {
+    public List<PlayerOverviewDto> getPlayers() {
         if (!gameState.equals(RUNNING)) {
             throw new IllegalStateException("get players failed - session is not running");
         }
