@@ -19,6 +19,22 @@ public class SessionController {
 
     public final SessionService sessionService;
 
+    @PostMapping("/session/player/{playerUid}/resource")
+    public ResponseEntity<String> getResource(@PathVariable(name = "playerUid") @NotNull String playerUid) {
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().body(GET_RESOURCE_FAILED_SESSION_IS_NOT_RUNNING);
+        }
+
+        ActionResult actionResult = sessionService.getResource(playerUid);
+
+        if (actionResult.isSuccessful()) {
+            return ResponseEntity.ok(actionResult.getMessage());
+        } else {
+            return ResponseEntity.badRequest().body(actionResult.getMessage());
+        }
+    }
+
+
     @PostMapping("/session/{sessionName}")
     public ResponseEntity<String> createSession(@PathVariable(name = "sessionName") @NotNull String sessionName) {
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_CREATED)) {
@@ -81,6 +97,24 @@ public class SessionController {
             return ResponseEntity.ok(PLAYER_JOINED_SESSION);
         } else {
             return ResponseEntity.badRequest().body(PLAYER_JOIN_SESSION_FAILED);
+        }
+    }
+    @PostMapping("/session/{sessionName}/GetPlayers")
+    public ResponseEntity<String> getPlayers(@PathVariable(name = "sessionName") @NotNull String sessionName) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
+            return ResponseEntity.badRequest().body(GET_PLAYERS_FAILED_SESSION_IS_NOT_RUNNING);
+        }
+
+        String players = sessionService.getPlayers();
+
+        if (players != null) {
+            return ResponseEntity.ok(players);
+        } else {
+            return ResponseEntity.noContent().build();
         }
     }
 
