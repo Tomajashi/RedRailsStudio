@@ -22,4 +22,8 @@ public interface ResponseText {
     String BOUGHT_UPGRADE = "successfully bought upgrade";
     String ACTION_FAILED_NO_MATCH_PLAYER = "action failed - no player matched uid";
     String ACTION_FAILED_NO_MATCH_PLAY_COMPONENT = "action failed - no play component matched uid";
+    String GET_PLAYERS_FAILED_SESSION_IS_NOT_RUNNING = "get players failed - session is not running";
+    String GET_RESOURCE_FAILED_SESSION_IS_NOT_RUNNING = "get resource failed - session is not running";
+    String GET_RESOURCE_FAILED_NO_MATCH_PLAYER = "get resource failed - no player matched uid";
+    String GET_RESOURCE_FAILED_NO_MATCH_PLAY_COMPONENT = "get resource failed - no play component matched uid";
 }
