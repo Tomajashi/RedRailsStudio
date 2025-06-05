@@ -102,8 +102,8 @@ public class SessionController {
     @PostMapping("/session/{sessionName}/{playerName}")
     public ResponseEntity<JoinSessionResponseDto> joinSession(
             @PathVariable(name = "sessionName") @NotNull String sessionName,
-            @PathVariable(name = "playerName") @NotNull String playerName,
-            @RequestBody PlayerOverviewDto playerOverviewDto) {
+            @PathVariable(name = "playerName") @NotNull String playerName
+            ) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, "Session name does not match"));
         }
@@ -111,6 +111,7 @@ public class SessionController {
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_STARTED)) {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED));
         }
+        PlayerOverviewDto playerOverviewDto = new PlayerOverviewDto();
         playerOverviewDto.setUId(UUID.randomUUID().toString());
         playerOverviewDto.setName(playerName);
 
