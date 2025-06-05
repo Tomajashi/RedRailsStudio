@@ -17,9 +17,11 @@ import de.gts.redrail.game.models.entities.Train;
 import de.gts.redrail.game.utils.RailUtil;
 import de.gts.redrail.game.utils.StationUtil;
 import de.gts.redrail.game.utils.TrainUtil;
-
+import de.gts.redrail.game.models.entities.*;
 @Component
 public class ResourceValidator {
+    private Train train;
+    private Station station;
 
     public boolean canBuyNewRail(Player player) {
         return player.getResourceRack().getDbCoin() >= NEW_RAIL;
@@ -36,6 +38,18 @@ public class ResourceValidator {
     }
 
     public boolean requirmentsForTrain(Player player) {
+        
+        for(Station station : player.getStations()) {
+            if (station.getTrainCapacity() == 0)
+              {      
+                return false;
+              }
+        }
+        if(player.getResourceRack().getEmployees() < player.getTrains().size() * train.getRequiredEmployees() + player.getStations().size()* station.getRequierdEmployes() || player.getResourceRack().getPower() < player.getStations().size() * station.getRequiredPower()+ player.getTrains().size() * train.getRequiredPower()) {
+            return false;
+        }
+       
+
         return player.getStations().size() >= 2 && player.getRails().size() >= player.getTrains().size() + 1;
     }
 
@@ -53,6 +67,9 @@ public class ResourceValidator {
     }
 
     public boolean canBuyNewStation(Player player) {
+        if(player.getResourceRack().getEmployees() < player.getTrains().size() * train.getRequiredEmployees() + player.getStations().size()* station.getRequierdEmployes() || player.getResourceRack().getPower() < player.getStations().size() * station.getRequiredPower()+ player.getTrains().size() * train.getRequiredPower()) {
+            return false;
+        }
         return player.getResourceRack().getDbCoin() >= NEW_STATION;
     }
 

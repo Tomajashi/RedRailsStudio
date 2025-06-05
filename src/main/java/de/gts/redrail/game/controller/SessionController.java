@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.gts.redrail.game.constants.GameStateEnum;
@@ -22,6 +21,7 @@ import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOIN_SESSION_FAI
 import static de.gts.redrail.game.constants.ResponseText.STARTED_SESSION;
 import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_NO_PLAYER;
 import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_SESSION_IS_NOT_CREATED_IS_RUNNING_OR_FINISHED;
+import de.gts.redrail.game.models.dtos.JoinSessionResponseDto;
 import de.gts.redrail.game.models.dtos.PlayerDto;
 import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
 import de.gts.redrail.game.models.dtos.SessionOverviewDto;
@@ -29,7 +29,6 @@ import de.gts.redrail.game.models.entities.ActionResult;
 import de.gts.redrail.game.service.SessionService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import de.gts.redrail.game.models.dtos.JoinSessionResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -118,7 +117,7 @@ public class SessionController {
         boolean result = sessionService.joinSession(playerOverviewDto);
 
         if (result) {
-            return ResponseEntity.ok(new JoinSessionResponseDto(true, playerOverviewDto.getUId(), "Player joined session"));
+            return ResponseEntity.ok(new JoinSessionResponseDto(true, playerOverviewDto.getUId(), PLAYER_JOINED_SESSION));
         } else {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED));
         }

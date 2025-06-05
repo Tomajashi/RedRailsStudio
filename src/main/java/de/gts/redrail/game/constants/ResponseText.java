@@ -26,5 +26,6 @@ public interface ResponseText {
     String GET_RESOURCE_FAILED_SESSION_IS_NOT_RUNNING = "get resource failed - session is not running";
     String GET_RESOURCE_FAILED_NO_MATCH_PLAYER = "get resource failed - no player matched uid";
     String GET_RESOURCE_FAILED_NO_MATCH_PLAY_COMPONENT = "get resource failed - no play component matched uid";
+    String ACTION_FAILED_NO_TRAIN_CAPACITY_LEFT = "action failed - Your stations have no train capacity left";
 
 }
