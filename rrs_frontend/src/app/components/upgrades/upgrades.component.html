@@ -2,12 +2,12 @@
   <div class="upgrade-types">
     <button class="pixel-button" 
             *ngFor="let type of upgradeTypes"
-            [class.active]="type === selectedUpgradeType"
+            [class.active]="type === selectedUpgradeType" 
             (click)="changeUpgradeType(type)">
       {{type}}
     </button>
   </div>
-
+  
   <div class="upgrades-list">
     <div class="upgrade-item" *ngFor="let upgrade of currentUpgrades">
       <img class="pixel-icon upgrade-icon" src="assets/pixel-placeholder.png" alt="Upgrade">

@@ -9,3 +9,4 @@ import { Component } from '@angular/core';
 export class UpgradesComponent {
 
 }
+//TODO Logic
