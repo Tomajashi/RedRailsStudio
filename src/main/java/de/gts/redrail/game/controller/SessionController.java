@@ -1,6 +1,7 @@
 package de.gts.redrail.game.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ import de.gts.redrail.game.models.entities.ActionResult;
 import de.gts.redrail.game.service.SessionService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-
+import de.gts.redrail.game.models.dtos.JoinSessionResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -98,22 +99,27 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.createCurrentSessionOverview());
     }
 
-    @PostMapping("/session/{sessionName}/player")
-    public ResponseEntity<String> joinSession(@PathVariable(name = "sessionName") @NotNull String sessionName, @RequestBody PlayerOverviewDto playerOverviewDto) {
+    @PostMapping("/session/{sessionName}/{playerName}")
+    public ResponseEntity<JoinSessionResponseDto> joinSession(
+            @PathVariable(name = "sessionName") @NotNull String sessionName,
+            @PathVariable(name = "playerName") @NotNull String playerName,
+            @RequestBody PlayerOverviewDto playerOverviewDto) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, "Session name does not match"));
         }
 
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_STARTED)) {
-            return ResponseEntity.badRequest().body(PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED);
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED));
         }
+        playerOverviewDto.setUId(UUID.randomUUID().toString());
+        playerOverviewDto.setName(playerName);
 
         boolean result = sessionService.joinSession(playerOverviewDto);
 
         if (result) {
-            return ResponseEntity.ok(PLAYER_JOINED_SESSION);
+            return ResponseEntity.ok(new JoinSessionResponseDto(true, playerOverviewDto.getUId(), "Player joined session"));
         } else {
-            return ResponseEntity.badRequest().body(PLAYER_JOIN_SESSION_FAILED);
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED));
         }
     }
     @PostMapping("/session/{sessionName}/GetPlayers")
