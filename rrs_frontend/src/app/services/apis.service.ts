@@ -34,6 +34,6 @@ export class APISService {
   }
 
   buyTrain(sessionName: string, playerUid: string) {
-    return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}playerId=${playerUid}`, null).subscribe((result) => console.log(result))
+    return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}playerId=${playerUid}`, null).subscribe((result: any) => console.log(result))
   }
 }

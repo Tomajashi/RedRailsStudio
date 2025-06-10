@@ -42,6 +42,5 @@ public class sessionController {
         return trainsInfo;
     }        
 
-
     
 }
