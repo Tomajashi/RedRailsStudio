@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResourceRack {
     Integer dbCoin = 1000;
-    Integer employees = 5;
-    Integer power = 5;
+    Integer employees = 8;
+    Integer power = 10;
 }
