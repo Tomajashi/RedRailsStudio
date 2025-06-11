@@ -1,23 +1,27 @@
 package de.gts.redrail.game.controller;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.gts.redrail.game.constants.GameStateEnum;
 import static de.gts.redrail.game.constants.ResponseText.CREATED_SESSION;
 import static de.gts.redrail.game.constants.ResponseText.CREATE_SESSION_FAILED_SESSION_IS_ALREADY_CREATED;
 import static de.gts.redrail.game.constants.ResponseText.END_SESSION;
+import static de.gts.redrail.game.constants.ResponseText.GET_RESOURCE_FAILED_SESSION_IS_NOT_RUNNING;
 import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOINED_SESSION;
 import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOIN_SESSION_FAILED;
 import static de.gts.redrail.game.constants.ResponseText.PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED;
 import static de.gts.redrail.game.constants.ResponseText.STARTED_SESSION;
 import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_NO_PLAYER;
 import static de.gts.redrail.game.constants.ResponseText.START_SESSION_FAILED_SESSION_IS_NOT_CREATED_IS_RUNNING_OR_FINISHED;
+import de.gts.redrail.game.models.dtos.JoinSessionResponseDto;
 import de.gts.redrail.game.models.dtos.PlayerDto;
 import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
 import de.gts.redrail.game.models.dtos.SessionOverviewDto;
@@ -38,12 +42,12 @@ public class SessionController {
             return ResponseEntity.badRequest().body(GET_RESOURCE_FAILED_SESSION_IS_NOT_RUNNING);
         }
 
-        ActionResult actionResult = sessionService.getResource(playerUid);
+        PlayerDto playerDto = sessionService.getPlayerStatus(playerUid);
 
-        if (actionResult.isSuccessful()) {
-            return ResponseEntity.ok(actionResult.getMessage());
+        if (playerDto != null) {
+            return ResponseEntity.ok(playerDto.toString());
         } else {
-            return ResponseEntity.badRequest().body(actionResult.getMessage());
+            return ResponseEntity.badRequest().body("Player not found");
         }
     }
 
@@ -94,42 +98,50 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.createCurrentSessionOverview());
     }
 
-    @PostMapping("/session/{sessionName}/player")
-    public ResponseEntity<String> joinSession(@PathVariable(name = "sessionName") @NotNull String sessionName, @RequestBody PlayerOverviewDto playerOverviewDto) {
+    @PostMapping("/session/{sessionName}/{playerName}")
+    public ResponseEntity<JoinSessionResponseDto> joinSession(
+            @PathVariable(name = "sessionName") @NotNull String sessionName,
+            @PathVariable(name = "playerName") @NotNull String playerName
+            ) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, "Session name does not match"));
         }
 
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_STARTED)) {
-            return ResponseEntity.badRequest().body(PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED);
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED));
         }
+        PlayerOverviewDto playerOverviewDto = new PlayerOverviewDto();
+        playerOverviewDto.setUId(UUID.randomUUID().toString());
+        playerOverviewDto.setName(playerName);
 
         boolean result = sessionService.joinSession(playerOverviewDto);
 
         if (result) {
-            return ResponseEntity.ok(PLAYER_JOINED_SESSION);
+            return ResponseEntity.ok(new JoinSessionResponseDto(true, playerOverviewDto.getUId(), PLAYER_JOINED_SESSION));
         } else {
-            return ResponseEntity.badRequest().body(PLAYER_JOIN_SESSION_FAILED);
+            return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED));
         }
     }
     @PostMapping("/session/{sessionName}/GetPlayers")
-    public ResponseEntity<String> getPlayers(@PathVariable(name = "sessionName") @NotNull String sessionName) {
+    public ResponseEntity<List<PlayerOverviewDto>> getPlayers(@PathVariable(name = "sessionName") @NotNull String sessionName) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
         }
 
         if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
-            return ResponseEntity.badRequest().body(GET_PLAYERS_FAILED_SESSION_IS_NOT_RUNNING);
+            return ResponseEntity.badRequest().build();
         }
 
-        String players = sessionService.getPlayers();
+        List<PlayerOverviewDto> players = sessionService.getPlayers();
 
-        if (players != null) {
+        if (players != null && !players.isEmpty()) {
             return ResponseEntity.ok(players);
         } else {
             return ResponseEntity.noContent().build();
         }
     }
+    
+    
 
     @GetMapping("/session/{sessionName}/player/{playerUid}")
     public ResponseEntity<PlayerDto> getPlayerStatus(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid) {
@@ -165,7 +177,7 @@ public class SessionController {
         return handleActionResult(actionResult);
     }
 
-    @PatchMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
+    @PostMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
     public ResponseEntity<String> buyRail(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "railUid") @NotNull String railUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
@@ -179,12 +191,14 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @PatchMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
+    @PostMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
     public ResponseEntity<String> upgradeTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "trainUid") @NotNull String trainUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
         }
-
+        if (trainUid == null || trainUid.isEmpty()) {
+            return ResponseEntity.badRequest().body("Train UID must not be null or empty");
+        }
         if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
             return ResponseEntity.badRequest().build();
         }
@@ -193,9 +207,8 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @PatchMapping("/session/{sessionName}/player/{playerUid}/train")
-    public ResponseEntity<String> buyTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "trainUid") @NotNull String trainUid
-) {
+    @PostMapping("/session/{sessionName}/player/{playerUid}/train")
+    public ResponseEntity<String> buyTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
         }
@@ -222,7 +235,7 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @PatchMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
+    @PostMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
     public ResponseEntity<String> upgradeStation(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "stationUid") @NotNull String stationUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
@@ -231,7 +244,9 @@ public class SessionController {
         if (!sessionService.getGameState().equals(GameStateEnum.RUNNING)) {
             return ResponseEntity.badRequest().build();
         }
-
+        if (stationUid == null || stationUid.isEmpty()) {
+            return ResponseEntity.badRequest().body("Station UID must not be null or empty");
+        }
         ActionResult actionResult = sessionService.upgradeStation(playerUid, stationUid);
 
         return handleActionResult(actionResult);

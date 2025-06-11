@@ -17,6 +17,8 @@ import static de.gts.redrail.game.constants.GameStateEnum.NOT_CREATED;
 import static de.gts.redrail.game.constants.GameStateEnum.NOT_STARTED;
 import static de.gts.redrail.game.constants.GameStateEnum.RUNNING;
 import static de.gts.redrail.game.constants.ResponseText.ACTION_FAILED_NO_MATCH_PLAYER;
+import static de.gts.redrail.game.constants.ResponseText.ACTION_FAILED_NO_TRAIN_CAPACITY_LEFT;
+
 import de.gts.redrail.game.mappers.dtos.PlayerDtoMapper;
 import de.gts.redrail.game.mappers.dtos.PlayerOverviewDtoMapper;
 import de.gts.redrail.game.mappers.entities.PlayerMapper;
@@ -51,7 +53,7 @@ public class SessionService {
         sessionPlayers = new ArrayList<>();
         gameState = NOT_STARTED;
     }
-    public list <PlayerOverviewDto> getPlayers() {
+    public List<PlayerOverviewDto> getPlayers() {
         if (!gameState.equals(RUNNING)) {
             throw new IllegalStateException("get players failed - session is not running");
         }
@@ -114,7 +116,8 @@ public class SessionService {
         
         train.setUId(UUID.randomUUID().toString());
         train.setLevel(1);
-
+        station1.setTrainCapacity(station1.getTrainCapacity() - 1);
+       
         newPlayer.setRails(new ArrayList<>());
         newPlayer.getRails().add(rail);
 
@@ -200,7 +203,16 @@ public class SessionService {
        
 
         resourceCalculator.calculateResource(List.of(playerOptional.get()));
+        for(Station station : playerOptional.get().getStations()) {
+            if (station.getTrainCapacity() == 0) {
+                return new ActionResult(false, ACTION_FAILED_NO_TRAIN_CAPACITY_LEFT);
+            }
+            else {
+                station.setTrainCapacity(station.getTrainCapacity() - 1);
+            }
+        }
 
+        
         return playComponentsStore.buyTrain(playerOptional.get());
     }
 
