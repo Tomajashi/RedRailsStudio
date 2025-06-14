@@ -122,7 +122,7 @@ public class SessionController {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED));
         }
     }
-    @PostMapping("/session/{sessionName}/GetPlayers")
+    @GetMapping("/session/{sessionName}/GetPlayers")
     public ResponseEntity<List<PlayerOverviewDto>> getPlayers(@PathVariable(name = "sessionName") @NotNull String sessionName) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
@@ -177,7 +177,7 @@ public class SessionController {
         return handleActionResult(actionResult);
     }
 
-    @PostMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
+    @GetMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
     public ResponseEntity<String> buyRail(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "railUid") @NotNull String railUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
@@ -191,7 +191,7 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @PostMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
+    @GetMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
     public ResponseEntity<String> upgradeTrain(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "trainUid") @NotNull String trainUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
@@ -235,7 +235,7 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @PostMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
+    @GetMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
     public ResponseEntity<String> upgradeStation(@PathVariable(name = "sessionName") @NotNull String sessionName, @PathVariable(name = "playerUid") @NotNull String playerUid, @PathVariable(name = "stationUid") @NotNull String stationUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
