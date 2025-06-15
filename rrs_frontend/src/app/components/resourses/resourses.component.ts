@@ -21,11 +21,15 @@ export class ResoursesComponent implements OnInit {
       this.apiService.getTotalTrains().subscribe((totalTrains: number) => {
         this.displayedValue = totalTrains; 
       });
-      this.apiService.getDBCoins().subscribe((coins: number) => { //holt DB coins vom backend service
+      this.apiService.getResources().subscribe((coins: number) => { //holt DB coins vom backend service
         this.coinZahl = coins; 
       });
     }, 30000) 
     
+  }
+
+  onStartSession() {
+    this.apiService.startSession('Test session');
   }
 
   onBuyTrain() {
