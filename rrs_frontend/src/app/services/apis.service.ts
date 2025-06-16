@@ -16,31 +16,30 @@ export class APISService {
   total_passangers: 0,
   total_railways: 0
 };
-  playerId = 1
+  playerUid = 1
 
   constructor(private http: HttpClient) {
-    http.get<TrainsInfo>(`localhost:8080/getTrainInfo?playerId=${this.playerId}`).subscribe((trainInfo: TrainsInfo) => console.log(trainInfo))
-    http.get<Resources>(`localhost:8080/getResources?playerId=${this.playerId}`).subscribe((resources: Resources) => console.log(resources))
+    //http.get<TrainsInfo>(`localhost:8080/getTrainInfo?playerId=${this.playerId}`).subscribe((trainInfo: TrainsInfo) => console.log(trainInfo))
+    //http.get<Resources>(`localhost:8080/getResources?playerId=${this.playerId}`).subscribe((resources: Resources) => console.log(resources))
   }
 
-  getTotalTrains(): Observable<any> {
-  return this.http
-  .get('http:///session/{sessionName}/player/{playerUid}/train/{trainUid} ')
+  getTotalTrains(sessionName: string, playerUid: string): Observable<any> {
+  return this.http.get(`http://localhost:8080/session/${sessionName}/player/${playerUid}/train/`);
     //.get<TrainsInfo>(`${this.apiUrl}/getTrainInfo?playerId=${this.playerId}`).pipe(map((info: TrainsInfo) => info.total_trains));
   }
 
-  getResources(): Observable<any> {
-  return this.http.get<Resources>('http://localhost8080/session/player/{playerUid}/resource ')
+  getResources(sessionName: string, playerUid: string): Observable<any> {
+  return this.http.get<Resources>(`http://localhost:8080/session/${sessionName}/player/${playerUid}/resource/`)
     //.get<Resources>(`${this.apiUrl}/getResources?playerId=${this.playerId}`).pipe(map((resources: Resources) => resources.DB_coin));
   }
 
   buyTrain(sessionName: string, playerUid: string) {
-    return this.http.post('http://localhost:8080/session/{sessionName}/player/{playerUid}/train ', null);
+    return this.http.post(`http://localhost:8080/session/${sessionName}/player/${playerUid}/train`, null);
     //return this.http.post(`${this.apiUrl}/session?sessionName=${sessionName}playerId=${playerUid}/train`, null).subscribe((result: any) => console.log(result))
   }
 
   startSession(sessionName: string): Observable<any> {
-    return this.http.patch('http://localhost:8080/session/start', null)
+    return this.http.patch(`http://localhost:8080/session/${sessionName}/start`, null)
     //return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
   }
 }
