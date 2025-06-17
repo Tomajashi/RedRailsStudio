@@ -16,11 +16,15 @@ export class APISService {
   total_passangers: 0,
   total_railways: 0
 };
-  playerUid = 1
+  playername = 1
 
   constructor(private http: HttpClient) {
     //http.get<TrainsInfo>(`localhost:8080/getTrainInfo?playerId=${this.playerId}`).subscribe((trainInfo: TrainsInfo) => console.log(trainInfo))
     //http.get<Resources>(`localhost:8080/getResources?playerId=${this.playerId}`).subscribe((resources: Resources) => console.log(resources))
+  }
+
+  postNewPlayer(sessionName: string, playerName: string){
+    return this.http.post(`http://localhost:8080/session/${sessionName}/${playerName}`, null);
   }
 
   getTotalTrains(sessionName: string, playerUid: string): Observable<any> {
@@ -41,5 +45,10 @@ export class APISService {
   startSession(sessionName: string): Observable<any> {
     return this.http.patch(`http://localhost:8080/session/${sessionName}/start`, null)
     //return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
+  }
+
+  creatSession(sessionName: string): Observable<any> {
+    return this.http.post(`http://localhost:8080/session/${sessionName}`, null);
+    //return this.http.post(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
   }
 }

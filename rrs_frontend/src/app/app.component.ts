@@ -14,4 +14,11 @@ import { CounterComponent } from './counter/counter.component';
 })
 export class AppComponent {
   title = 'rrs_frontend';
-}
+   
+  constructor(private apiService: APISService) {
+    this.apiService.creatSession('test session');  //erstellt ein Session
+    this.apiService.startSession('test session'); //Startet session
+    this.apiService.postNewPlayer('test session', 'Player1'); //erstellt eine Player
+  }
+} 
+
