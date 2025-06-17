@@ -16,7 +16,7 @@ export class APISService {
   total_passangers: 0,
   total_railways: 0
 };
-  playername = 1
+ 
 
   constructor(private http: HttpClient) {
     //http.get<TrainsInfo>(`localhost:8080/getTrainInfo?playerId=${this.playerId}`).subscribe((trainInfo: TrainsInfo) => console.log(trainInfo))

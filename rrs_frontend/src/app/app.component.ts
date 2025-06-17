@@ -17,8 +17,9 @@ export class AppComponent {
    
   constructor(private apiService: APISService) {
     this.apiService.creatSession('testsession');  //erstellt ein Session
-    this.apiService.startSession('testsession'); //Startet session
     this.apiService.postNewPlayer('testsession', 'Player1'); //erstellt eine Player
+    this.apiService.startSession('testsession'); //Startet session
+    
   }
 } 
 

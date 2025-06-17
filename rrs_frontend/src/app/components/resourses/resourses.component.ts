@@ -14,21 +14,23 @@ export class ResoursesComponent implements OnInit {
   coinZahl: number = 0; // Anzahl der Coins
 
   constructor(private apiService: APISService) {
-    
+
   }
   ngOnInit(): void {
     setInterval(() => {
-      this.apiService.getTotalTrains('testsession', '1').subscribe((totalTrains: number) => {
-        this.displayedValue = totalTrains; 
+      this.apiService.getTotalTrains('testsession', 'Player1').subscribe((totalTrains: number) => {
+        this.displayedValue = totalTrains;
       });
-      this.apiService.getResources('testsession', '1').subscribe((coins: number) => { //holt DB coins vom backend service
-        this.coinZahl = coins; 
+      this.apiService.getResources('testsession', 'Player1').subscribe((coins: number) => { //holt DB coins vom backend service
+        this.coinZahl = coins;
       });
-    }, 10000) 
-    
+    }, 10000)
+
   }
 
-  onBuyTrain() {
-    this.apiService.buyTrain('testsession', '1');
+  StartSession() {
+    this.apiService.creatSession('testsession');  //erstellt ein Session
+    this.apiService.postNewPlayer('testsession', 'Player1'); //erstellt eine Player
+    this.apiService.startSession('testsession'); //Startet session
   }
 }
