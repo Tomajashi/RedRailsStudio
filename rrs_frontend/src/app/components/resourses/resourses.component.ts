@@ -29,8 +29,12 @@ export class ResoursesComponent implements OnInit {
   }
 
   StartSession() {
-    this.apiService.creatSession('testsession');  //erstellt ein Session
-    this.apiService.postNewPlayer('testsession', 'Player1'); //erstellt eine Player
-    this.apiService.startSession('testsession'); //Startet session
+    // Example for creating a session
+    this.apiService.creatSession('testsession').subscribe({
+      next: (res) => console.log('Session created', res),
+      error: (err) => console.error('Session creation failed', err)
+    });
+    this.apiService.postNewPlayer('testsession', 'Player1').subscribe; //erstellt eine Player
+    this.apiService.startSession('testsession').subscribe; //Startet session
   }
 }
