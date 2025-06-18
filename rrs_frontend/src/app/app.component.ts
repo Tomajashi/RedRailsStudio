@@ -16,10 +16,12 @@ export class AppComponent {
   title = 'rrs_frontend';
    
   constructor(private apiService: APISService) {
-    this.apiService.creatSession('testsession').subscribe();  //erstellt ein Session
-    this.apiService.postNewPlayer('testsession', 'Player1'); //erstellt eine Player
-    this.apiService.startSession('testsession'); //Startet session
+    this.apiService.creatSession('testsession').subscribe((response) => {console.log('Session created')},
+    (error) => {console.log('Error creating session')});  //erstellt ein Session
+    this.apiService.postNewPlayer('testsession', 'Player1').subscribe((response)=> {console.log('New Player')},
+    (error)=> {console.log('Error player')}); //Startet session; //erstellt eine Player
+    this.apiService.startSession('testsession').subscribe((response)=> {console.log('Session started')},
+    (error)=> {console.log('Error starting')}); //Startet session
     
   }
 } 
-
