@@ -51,4 +51,8 @@ export class APISService {
     return this.http.post(`http://localhost:8080/session/${sessionName}`, null);
     //return this.http.post(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
   }
+
+  killSession(sessionName: string): Observable<any> {
+    return this.http.patch(`http://localhost:8080/session/${sessionName}/kill`, null)
+  }
 }

@@ -14,6 +14,7 @@ import { CounterComponent } from './counter/counter.component';
 })
 export class AppComponent {
   title = 'rrs_frontend';
+  sessionId = new Date().getTime().toString();
    
   constructor(private apiService: APISService) {
    
@@ -27,10 +28,14 @@ export class AppComponent {
   }
 
   onCreateSession() {
-    this.apiService.createSession(new Date().getTime().toString()).subscribe((response) => {console.log('Session created')},
+    this.apiService.createSession(this.sessionId).subscribe((response) => {console.log('Session created')},
     (error) => {console.log('Error creating session')},
      );  //erstellt ein Session
   }
 
-  
+  onKillSession(){
+    this.apiService.killSession(this.sessionId).subscribe((response) => {console.log('Session killed')},
+    (error) => {console.log('Error killing session')},
+  );
+  }
 } 
