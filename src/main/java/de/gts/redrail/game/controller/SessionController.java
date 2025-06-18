@@ -109,7 +109,7 @@ public class SessionController {
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_STARTED)) {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED));
         }
-        
+
         PlayerOverviewDto playerOverviewDto = new PlayerOverviewDto();
         playerOverviewDto.setUId(UUID.randomUUID().toString());
         playerOverviewDto.setName(playerName);
@@ -177,9 +177,19 @@ public class SessionController {
         return handleActionResult(actionResult);
         //TODO: Es sollte die UID der gekauften Schiene zurückgegeben werden.
     }
+    @PatchMapping("/session/{sessionName}/kill")
+    public ResponseEntity<String> killSession(@PathVariable(name = "sessionName")  String sessionName) {
+        if (!sessionService.isSessionNameMatching(sessionName)) {
+            return ResponseEntity.noContent().build();
+        }
 
-    @GetMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
-    public ResponseEntity<String> buyRail(@PathVariable(name = "sessionName")  String sessionName, @PathVariable(name = "playerUid")  String playerUid, @PathVariable(name = "railUid")  String railUid) {
+        sessionService.killSession();
+
+        return ResponseEntity.ok("Session killed successfully");
+    }
+
+    @PatchMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}/upgrade")
+    public ResponseEntity<String> upgradeRail(@PathVariable(name = "sessionName")  String sessionName, @PathVariable(name = "playerUid")  String playerUid, @PathVariable(name = "railUid")  String railUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();
         }
@@ -192,7 +202,7 @@ public class SessionController {
 
         return handleActionResult(actionResult);
     }
-    @GetMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}")
+    @PatchMapping("/session/{sessionName}/player/{playerUid}/train/{trainUid}/upgrade")
     public ResponseEntity<String> upgradeTrain(@PathVariable(name = "sessionName")  String sessionName, @PathVariable(name = "playerUid")  String playerUid, @PathVariable(name = "trainUid")  String trainUid) {
         if (!sessionService.isSessionNameMatching(sessionName)) {
             return ResponseEntity.noContent().build();

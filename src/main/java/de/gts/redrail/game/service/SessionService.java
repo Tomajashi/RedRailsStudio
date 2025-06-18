@@ -53,6 +53,12 @@ public class SessionService {
         sessionPlayers = new ArrayList<>();
         gameState = NOT_STARTED;
     }
+    public void killSession() {
+        sessionName = null;
+        sessionPlayers = null;
+        gameState = NOT_CREATED;
+        sessionClock.endClock();
+    }
     public List<PlayerOverviewDto> getPlayers() {
         if (!gameState.equals(RUNNING)) {
             throw new IllegalStateException("get players failed - session is not running");
