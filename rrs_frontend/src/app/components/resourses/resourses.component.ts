@@ -37,4 +37,7 @@ export class ResoursesComponent implements OnInit {
     this.apiService.postNewPlayer('testsession', 'Player1').subscribe; //erstellt eine Player
     this.apiService.startSession('testsession').subscribe; //Startet session
   }
+  //TODO: Es sollte nicht mehrmals URLS aufeinmal aufgerufen werden, sondern nur einmal.
+  //TODO: Es sollte Anfangs Menu erstellt die ein auswahl fur singel und Multiplayer gibt.
+
 }
