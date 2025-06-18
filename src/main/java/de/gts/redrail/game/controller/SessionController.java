@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ import de.gts.redrail.game.models.dtos.PlayerOverviewDto;
 import de.gts.redrail.game.models.dtos.SessionOverviewDto;
 import de.gts.redrail.game.models.entities.ActionResult;
 import de.gts.redrail.game.service.SessionService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -176,6 +174,7 @@ public class SessionController {
         ActionResult actionResult = sessionService.buyRail(playerUid);
 
         return handleActionResult(actionResult);
+        //TODO: Es sollte die UID der gekauften Schiene zurückgegeben werden.
     }
 
     @GetMapping("/session/{sessionName}/player/{playerUid}/rail/{railUid}")
@@ -221,6 +220,7 @@ public class SessionController {
         ActionResult actionResult = sessionService.buyTrain(playerUid);
 
         return handleActionResult(actionResult);
+        //TODO: Es sollte die UID des gekauften Zuges zurückgegeben werden.
     }
     @PostMapping("/session/{sessionName}/player/{playerUid}/station")
     public ResponseEntity<String> buyStation(@PathVariable(name = "sessionName")  String sessionName, @PathVariable(name = "playerUid")  String playerUid) {
@@ -235,6 +235,7 @@ public class SessionController {
         ActionResult actionResult = sessionService.buyStation(playerUid);
 
         return handleActionResult(actionResult);
+        //TODO: Es sollte die UID der gekauften Station zurückgegeben werden.
     }
     @GetMapping("/session/{sessionName}/player/{playerUid}/station/{stationUid}")
     public ResponseEntity<String> upgradeStation(@PathVariable(name = "sessionName")  String sessionName, @PathVariable(name = "playerUid")  String playerUid, @PathVariable(name = "stationUid")  String stationUid) {
