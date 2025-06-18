@@ -47,7 +47,7 @@ export class APISService {
     //return this.http.patch(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
   }
 
-  creatSession(sessionName: string): Observable<any> {
+  createSession(sessionName: string): Observable<any> {
     return this.http.post(`http://localhost:8080/session/${sessionName}`, null);
     //return this.http.post(`${this.apiUrl}/session?sessionName=${sessionName}`, null);
   }

@@ -17,20 +17,20 @@ export class ResoursesComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    setInterval(() => {
-      this.apiService.getTotalTrains('testsession', 'Player1').subscribe((totalTrains: number) => {
-        this.displayedValue = totalTrains;
-      });
-      this.apiService.getResources('testsession', 'Player1').subscribe((coins: number) => { //holt DB coins vom backend service
-        this.coinZahl = coins;
-      });
-    }, 10000)
+  //   setInterval(() => {
+  //     this.apiService.getTotalTrains('testsession', 'Player1').subscribe((totalTrains: number) => {
+  //       this.displayedValue = totalTrains;
+  //     });
+  //     this.apiService.getResources('testsession', 'Player1').subscribe((coins: number) => { //holt DB coins vom backend service
+  //       this.coinZahl = coins;
+  //     });
+  //   }, 10000)
 
-  }
+   }
 
   StartSession() {
     // Example for creating a session
-    this.apiService.creatSession('testsession').subscribe({
+    this.apiService.createSession (new Date().getTime().toString()).subscribe({
       next: (res) => console.log('Session created', res),
       error: (err) => console.error('Session creation failed', err)
     });
