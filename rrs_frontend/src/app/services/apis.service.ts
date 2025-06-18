@@ -55,4 +55,8 @@ export class APISService {
   killSession(sessionName: string): Observable<any> {
     return this.http.patch(`http://localhost:8080/session/${sessionName}/kill`, null)
   }
+
+  joinSession(sessionName: string, playerName: string): Observable<any> {
+    return this.http.post(`http://localhost:8080/session/${sessionName}/${playerName}`, null);
+  }
 }

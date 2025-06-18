@@ -22,15 +22,18 @@ export class AppComponent {
     this.apiService.postNewPlayer('testsession', 'Player1').subscribe((response)=> {console.log('New Player')},
     (error)=> {console.log('Error player')}); //Startet session; //erstellt eine Player
 
-    this.apiService.startSession('testsession').subscribe((response)=> {console.log('Session started')},
-    (error)=> {console.log('Error starting')}); //Startet session
-    
   }
 
   onCreateSession() {
     this.apiService.createSession(this.sessionId).subscribe((response) => {console.log('Session created')},
     (error) => {console.log('Error creating session')},
      );  //erstellt ein Session
+  }
+
+  onStartSession() {
+    this.apiService.startSession('testsession').subscribe((response) => {console.log('Session started')},
+    (error) => {console.log('Error starting session')},
+    );  //startet ein Session
   }
 
   onKillSession(){
