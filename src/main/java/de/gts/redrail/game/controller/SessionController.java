@@ -109,6 +109,7 @@ public class SessionController {
         if (!sessionService.getGameState().equals(GameStateEnum.NOT_STARTED)) {
             return ResponseEntity.ok(new JoinSessionResponseDto(false, null, PLAYER_JOIN_SESSION_FAILED_SESSION_IS_RUNNING_OR_FINISHED));
         }
+        
         PlayerOverviewDto playerOverviewDto = new PlayerOverviewDto();
         playerOverviewDto.setUId(UUID.randomUUID().toString());
         playerOverviewDto.setName(playerName);
