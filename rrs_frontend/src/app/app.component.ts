@@ -15,16 +15,16 @@ import { CounterComponent } from './counter/counter.component';
 export class AppComponent {
   title = 'rrs_frontend';
   sessionId = new Date().getTime().toString();
-   
+
   constructor(private apiService: APISService) {
-   
+
 
     this.apiService.postNewPlayer('testsession', 'Player1').subscribe((response)=> {console.log('New Player')},
     (error)=> {console.log('Error player')}); //Startet session; //erstellt eine Player
 
     this.apiService.startSession('testsession').subscribe((response)=> {console.log('Session started')},
     (error)=> {console.log('Error starting')}); //Startet session
-    
+
   }
 
   onCreateSession() {
@@ -38,4 +38,8 @@ export class AppComponent {
     (error) => {console.log('Error killing session')},
   );
   }
-} 
+
+//TODO:Die Name des Sessions Soll Mehr nachvollziehbar sein. bsp Session1, Session2 usw.
+//TODO:Es Sollte textfeld geben fur eingabe von Playername und joinSession button
+
+}
