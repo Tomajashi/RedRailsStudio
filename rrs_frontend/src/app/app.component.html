@@ -11,13 +11,13 @@
 
       <input
       type="text"
-      [(ngModel)]="playerName"
+      #playerNameInput
       placeholder="Dein Name..."
       style="margin-bottom: 10px; display: block;"
       />
       <button (click)="onCreateSession()"> create Session</button>
       <button (click)="onStartSession()"> start Session</button>
-      <button (click)="onJoinSession()"> join Session</button>
+      <button (click)="onJoinSession(playerNameInput.value)"> join Session</button>
       <button (click)="onKillSession()">kill session</button>
      <!-- <app-counter></app-counter> -->
     </div>

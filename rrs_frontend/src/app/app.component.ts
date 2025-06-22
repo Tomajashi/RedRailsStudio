@@ -4,13 +4,11 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ResoursesComponent } from './components/resourses/resourses.component';
 import { APISService } from './services/apis.service';
 import { CounterComponent } from './counter/counter.component';
-import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MapComponent, ResoursesComponent, FormsModule],  // Keep only MapComponent
+  imports: [MapComponent, ResoursesComponent,],  // Keep only MapComponent
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -19,16 +17,11 @@ export class AppComponent {
   sessionId = new Date().getTime().toString();
   playerName: string = '';
 
-
   constructor(private apiService: APISService) {
-
+   
 
     this.apiService.postNewPlayer('testsession', 'Player1').subscribe((response)=> {console.log('New Player')},
     (error)=> {console.log('Error player')}); //Startet session; //erstellt eine Player
-
-
-    this.apiService.startSession('testsession').subscribe((response)=> {console.log('Session started')},
-    (error)=> {console.log('Error starting')}); //Startet session
 
   }
 
@@ -50,13 +43,11 @@ export class AppComponent {
   );  //killt ein Session
   }
 
-  onJoinSession() {
-    this.apiService.joinSession(`testsession`, `Player2`).subscribe((response) => {console.log('New Player joined the Session')},
-    (error) => {console.log(`Error joining session`)},
-    );  //join a session
-  }
-
-//TODO:Die Name des Sessions Soll Mehr nachvollziehbar sein. bsp Session1, Session2 usw.
-//TODO:Es Sollte textfeld geben fur eingabe von Playername und joinSession button
-
-}
+  onJoinSession(playerName?: string) {
+  const name = playerName || this.playerName || 'Player2';
+  this.apiService.postNewPlayer('testsession', name).subscribe(
+    (response) => { console.log('New Player joined the Session'); },
+    (error) => { console.log('Error joining session'); }
+  );
+ }
+} 
