@@ -18,7 +18,7 @@ export class AppComponent {
   playerName: string = '';
 
   constructor(private apiService: APISService) {
-   
+
 
     this.apiService.postNewPlayer('testsession', 'Player1').subscribe((response)=> {console.log('New Player')},
     (error)=> {console.log('Error player')}); //Startet session; //erstellt eine Player
@@ -49,5 +49,10 @@ export class AppComponent {
     (response) => { console.log('New Player joined the Session'); },
     (error) => { console.log('Error joining session'); }
   );
+
  }
-} 
+onSetPlayerName(name: string) {
+  this.playerName = name;
+ //TODO: Logik fur namen eingabe verbessern.
+}
+}
