@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule],
+  imports: [BrowserModule, StoreModule.forRoot({}, {})], // Initialize the store with an empty object
   providers: [],
   bootstrap: [AppComponent],
 })
