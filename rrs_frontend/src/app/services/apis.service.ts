@@ -19,8 +19,6 @@ export class APISService {
 
 
   constructor(private http: HttpClient) {
-    //http.get<TrainsInfo>(`localhost:8080/getTrainInfo?playerId=${this.playerId}`).subscribe((trainInfo: TrainsInfo) => console.log(trainInfo))
-    //http.get<Resources>(`localhost:8080/getResources?playerId=${this.playerId}`).subscribe((resources: Resources) => console.log(resources))
   }
 
   postNewPlayer(sessionName: string, playerName: string){
@@ -55,4 +53,5 @@ export class APISService {
   killSession(sessionName: string): Observable<any> {
     return this.http.patch(`http://localhost:8080/session/${sessionName}/kill`, null)
   }
+
 }
